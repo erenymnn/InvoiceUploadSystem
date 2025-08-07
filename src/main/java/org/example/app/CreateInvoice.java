@@ -41,7 +41,8 @@ public class CreateInvoice extends JFrame {
 
         ustPanel.add(new JLabel("Fatura Numarası:"));
         txtFaturaNumarasi = new JTextField();
-        txtFaturaNumarasi.setDocument(new Number(12));
+        txtFaturaNumarasi.setDocument(new NumberDocument(5)); // Maksimum 5 karakter
+
         ustPanel.add(txtFaturaNumarasi);
 
         JButton btnMusteriSec = new JButton("Müşteri Seç");
