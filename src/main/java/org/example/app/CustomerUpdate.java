@@ -13,18 +13,18 @@ public class CustomerUpdate extends JFrame {
     public CustomerUpdate(int id, String name, String surname, String tckn) {
         this.musteriId = id;
 
-        setTitle("Update Customer");
+        setTitle("Müşteri Güncelle");
         setSize(400, 250);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-        JPanel panel = new JPanel(new GridLayout(4, 2, 10, 10));
+        JPanel panel = new JPanel(new GridLayout(5, 2, 10, 10));
 
-        panel.add(new JLabel("Name:"));
-        txtname = new JTextField(name);
+        panel.add(new JLabel("Ad:"));
+        txtname  = new JTextField(name);
         panel.add(txtname);
 
-        panel.add(new JLabel("Surname:"));
+        panel.add(new JLabel("Soyad:"));
         txtsurname = new JTextField(surname);
         panel.add(txtsurname);
 
@@ -32,7 +32,7 @@ public class CustomerUpdate extends JFrame {
         txttckn = new JTextField(tckn);
         panel.add(txttckn);
 
-        JButton btnGuncelle = new JButton("Update");
+        JButton btnGuncelle = new JButton("Güncelle");
         panel.add(btnGuncelle);
 
         add(panel);
@@ -42,14 +42,19 @@ public class CustomerUpdate extends JFrame {
             String yeniSoyad = txtsurname.getText().trim();
             String yeniTckn = txttckn.getText().trim();
 
+            if (yeniAd.isEmpty() || yeniSoyad.isEmpty() || yeniTckn.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Lütfen tüm alanları doldurun!");
+                return;
+            }
+
             DBHelper db = new DBHelper();
             boolean updated = db.updateMusteri(musteriId, yeniAd, yeniSoyad, yeniTckn);
 
             if (updated) {
-                JOptionPane.showMessageDialog(this, "Customer updated successfully.");
+                JOptionPane.showMessageDialog(this, "Müşteri başarıyla güncellendi.");
                 dispose();
             } else {
-                JOptionPane.showMessageDialog(this, "Update failed.");
+                JOptionPane.showMessageDialog(this, "Güncelleme başarısız oldu.");
             }
         });
 

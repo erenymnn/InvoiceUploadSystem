@@ -2,78 +2,55 @@ package org.example.app;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
 
 public class ProductSelectFrame extends JFrame {
-    private JList<String> productList;
-    private JTextField txtMiktar;
+
     private CreateInvoice parent;
+    private DefaultListModel<String> model;
+    private JList<String> productList;
+    private List<DBHelper.Product> products;  // Burada DBHelper.Product olarak değiştirildi
 
     public ProductSelectFrame(CreateInvoice parent) {
         this.parent = parent;
-
-        setTitle("Ürün Seçimi");
-        setSize(350, 250);
+        setTitle("Ürün Seç");
+        setSize(400, 300);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-        String[] products = {"Kalem -4.5tl", "Silgi -5.0tl", "Çanta -20.0tl"};
-
-        productList = new JList<>(products);
+        model = new DefaultListModel<>();
+        productList = new JList<>(model);
         JScrollPane scrollPane = new JScrollPane(productList);
 
-        JLabel lblMiktar = new JLabel("Miktar:");
-        txtMiktar = new JTextField("1", 5);
+        JButton btnSelect = new JButton("Seç");
+        JPanel panelButtons = new JPanel();
+        panelButtons.add(btnSelect);
 
-        JButton btnEkle = new JButton("Ekle");
-
-        JPanel bottomPanel = new JPanel();
-        bottomPanel.add(lblMiktar);
-        bottomPanel.add(txtMiktar);
-        bottomPanel.add(btnEkle);
-
-        setLayout(new BorderLayout());
         add(scrollPane, BorderLayout.CENTER);
-        add(bottomPanel, BorderLayout.SOUTH);
+        add(panelButtons, BorderLayout.SOUTH);
 
-        btnEkle.addActionListener(e -> {
-            String secilenUrun = productList.getSelectedValue();
-            String miktarStr = txtMiktar.getText().trim();
+        // DB'den ürünleri çek
+        DBHelper db = new DBHelper();
+        products = db.getAllProducts();
 
-            if (secilenUrun == null) {
-                JOptionPane.showMessageDialog(this, "Lütfen bir ürün seçiniz.");
-                return;
+        // Ürünleri listeye ekle
+        for (DBHelper.Product p : products) {
+            model.addElement(p.getName() + " - " + String.format("%.2f", p.getPrice()) + " TL");
+        }
+
+        btnSelect.addActionListener(e -> {
+            int selectedIndex = productList.getSelectedIndex();
+            if (selectedIndex != -1) {
+                DBHelper.Product selectedProduct = products.get(selectedIndex);
+                int miktar = 1;
+                double toplam = selectedProduct.getPrice() * miktar;
+
+                parent.urunEklendi(selectedProduct.getId(), selectedProduct.getName(), selectedProduct.getPrice(), miktar, toplam);
+
+                dispose();
+            } else {
+                JOptionPane.showMessageDialog(this, "Lütfen bir ürün seçin.");
             }
-            if (miktarStr.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Lütfen miktar giriniz.");
-                return;
-            }
-
-            int miktar;
-            try {
-                miktar = Integer.parseInt(miktarStr);
-                if (miktar <= 0) {
-                    JOptionPane.showMessageDialog(this, "Miktar pozitif bir sayı olmalıdır.");
-                    return;
-                }
-            } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(this, "Geçerli bir sayı giriniz.");
-                return;
-            }
-
-            // Separate product name and price
-            String[] parts = secilenUrun.split(" -");
-            String urunAdi = parts[0];
-            double fiyat = Double.parseDouble(parts[1].replace("tl", "").trim());
-
-            double toplam = fiyat * miktar;
-
-            // Send product to main window
-            parent.urunEklendi(urunAdi, fiyat, miktar, toplam);
-
-            // close window
-            dispose();
         });
-
-        setVisible(true);
     }
 }
