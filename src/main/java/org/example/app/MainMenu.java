@@ -37,6 +37,26 @@ public class MainMenu extends JFrame {
 
 
         });
+        btnFaturaSil.addActionListener(e -> {
+            String series = JOptionPane.showInputDialog(this, "Fatura Serisini Girin:");
+            String number = JOptionPane.showInputDialog(this, "Fatura Numarasını Girin:");
+
+            if (series != null && number != null) {
+                DBHelper db = new DBHelper();
+                int invoiceId = db.findInvoiceIdBySeriesAndNumber(series, number);
+                if (invoiceId == -1) {
+                    JOptionPane.showMessageDialog(this, "Fatura bulunamadı.");
+                    return;
+                }
+
+                boolean deleted = db.deleteInvoiceById(invoiceId);
+                if (deleted) {
+                    JOptionPane.showMessageDialog(this, "Fatura başarıyla silindi.");
+                } else {
+                    JOptionPane.showMessageDialog(this, "Fatura silinemedi.");
+                }
+            }
+        });
 
 
         btnCikis.addActionListener(e -> System.exit(0)); // programı kapatmaya yarar.

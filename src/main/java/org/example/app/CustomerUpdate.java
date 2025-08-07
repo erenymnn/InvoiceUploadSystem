@@ -7,7 +7,7 @@ public class CustomerUpdate extends JFrame {
 
     private JTextField txtname;
     private JTextField txtsurname;
-    private JTextField txttckn;
+    private JTextField txtTckn;
     private int musteriId;
 
     public CustomerUpdate(int id, String name, String surname, String tckn) {
@@ -29,8 +29,9 @@ public class CustomerUpdate extends JFrame {
         panel.add(txtsurname);
 
         panel.add(new JLabel("TCKN:"));
-        txttckn = new JTextField(tckn);
-        panel.add(txttckn);
+        txtTckn = new JTextField(tckn);
+        txtTckn.setDocument(new LimitliDocument(5));
+        panel.add(txtTckn);
 
         JButton btnGuncelle = new JButton("Güncelle");
         panel.add(btnGuncelle);
@@ -40,7 +41,7 @@ public class CustomerUpdate extends JFrame {
         btnGuncelle.addActionListener(e -> {
             String yeniAd = txtname.getText().trim();
             String yeniSoyad = txtsurname.getText().trim();
-            String yeniTckn = txttckn.getText().trim();
+            String yeniTckn = txtTckn.getText().trim();
 
             if (yeniAd.isEmpty() || yeniSoyad.isEmpty() || yeniTckn.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Lütfen tüm alanları doldurun!");

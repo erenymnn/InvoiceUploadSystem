@@ -2,12 +2,15 @@ package org.example.app;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.AbstractDocument;
 import java.awt.*;
 
 public class CreateInvoice extends JFrame {
 
     private JTextField txtFaturaSerisi;
     private JTextField txtFaturaNumarasi;
+
+
     private JLabel lblSecilenMusteri;
 
     private JTable tblUrunler;
@@ -35,9 +38,10 @@ public class CreateInvoice extends JFrame {
 
 
 
+
         ustPanel.add(new JLabel("Fatura Numarası:"));
         txtFaturaNumarasi = new JTextField();
-        txtFaturaNumarasi.setDocument(new NumberDocument(10));
+        txtFaturaNumarasi.setDocument(new Number(12));
         ustPanel.add(txtFaturaNumarasi);
 
         JButton btnMusteriSec = new JButton("Müşteri Seç");
@@ -104,6 +108,9 @@ public class CreateInvoice extends JFrame {
     }
 
 
+
+
+
     public void musteriSecildi(int id, String adSoyad, String tckn) {
         this.secilenMusteriId = id;
         lblSecilenMusteri.setText("Seçilen Müşteri: " + adSoyad + " (TCKN: " + tckn + ")");
@@ -148,6 +155,7 @@ public class CreateInvoice extends JFrame {
 
 
 
+
         if (series.length() < 5 || invoiceNum.length() < 10) {
             JOptionPane.showMessageDialog(this, "fatura seri numarası veya fatura numarasını Eksik girdiniz. Lütfen tüm alanları doğru doldurun.");
             return; // Devam etme, işlem durur
@@ -159,6 +167,14 @@ public class CreateInvoice extends JFrame {
             JOptionPane.showMessageDialog(this, "Fatura serisi ve numarası boş olamaz.");
             return;
         }
+        DBHelper db = new DBHelper();
+
+        // Burada kontrol ekliyoruz:
+        if (db.invoiceExists(series, invoiceNum)) {
+            JOptionPane.showMessageDialog(this, "Bu seri ve numaraya sahip fatura zaten mevcut. Lütfen farklı bir fatura bilgisi girin.");
+            return; // Ekleme işlemini durdur
+        }
+
 
         if (secilenMusteriId == -1) {
             JOptionPane.showMessageDialog(this, "Lütfen müşteri seçin.");
@@ -180,16 +196,16 @@ public class CreateInvoice extends JFrame {
         double totalAfterDiscount = total - discount;
         if (totalAfterDiscount < 0) totalAfterDiscount = 0;
 
-        DBHelper db = new DBHelper();
+        DBHelper dbb = new DBHelper();
 
-        int invoiceId = db.addInvoice(series, invoiceNum, secilenMusteriId, discount, totalAfterDiscount);
-        if (invoiceId == -1) {
-            JOptionPane.showMessageDialog(this, "Fatura kaydedilirken hata oluştu.");
-            return;
+        // Burada kontrol ekliyoruz:
+        if (dbb.invoiceExists(series, invoiceNum)) {
+            JOptionPane.showMessageDialog(this, "Bu seri ve numaraya sahip fatura zaten mevcut. Lütfen farklı bir fatura bilgisi girin.");
+            return; // Ekleme işlemini durdur
         }
-
         boolean itemsSaved = true;
         for (int i = 0; i < tableModel.getRowCount(); i++) {
+            int invoiceId = Integer.parseInt(tableModel.getValueAt(i, 0).toString());
             int itemId = (int) tableModel.getValueAt(i, 0);
             int quantity = (int) tableModel.getValueAt(i, 3);
             double itemTotal = (double) tableModel.getValueAt(i, 4);

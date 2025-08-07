@@ -1,5 +1,6 @@
 package org.example.app;
 
+import javax.swing.*;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -179,4 +180,60 @@ public class DBHelper {
             return false;
         }
     }
+    // Seri ve numaraya göre faturanın ID'sini getir
+    public int findInvoiceIdBySeriesAndNumber(String series, String number) {
+        String sql = "SELECT id FROM invoices WHERE series = ? AND invoice = ?";
+        try (Connection conn = DriverManager.getConnection(CONNECTION_STRING, USERNAME, PASSWORD);
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, series);
+            pstmt.setString(2, number);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("id");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1; // bulunamadıysa
+    }
+
+    // ID'ye göre fatura sil
+    public boolean deleteInvoiceById(int invoiceId) {
+        String sql = "DELETE FROM invoices WHERE id = ?";
+        try (Connection conn = DriverManager.getConnection(CONNECTION_STRING, USERNAME, PASSWORD);
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, invoiceId);
+            int affectedRows = pstmt.executeUpdate();
+            return affectedRows > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    public boolean invoiceExists(String series, String invoiceNum) {
+        String sql = "SELECT COUNT(*) FROM invoices WHERE series = ? AND invoice = ?";
+        try (Connection conn = DriverManager.getConnection(CONNECTION_STRING, USERNAME, PASSWORD);
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, series);
+            pstmt.setString(2, invoiceNum);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    int count = rs.getInt(1);
+                    return count > 0;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+
+
 }
+
+
+
