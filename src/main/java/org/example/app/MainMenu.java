@@ -8,65 +8,53 @@ import java.awt.event.ActionListener;
 public class MainMenu extends JFrame {
     public MainMenu() {
         setTitle("Fatura Yükleme Sistemi - Ana Menü");
-        setSize(400,200);
+        setSize(400, 250);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null); // ekranın ortasında açılır
 
         JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(2, 2,10,10));
+        panel.setLayout(new GridLayout(3, 2, 10, 10)); // 3 satır, 2 sütun, aralar 10px
 
-        JButton btnFaturaOlustur=new JButton("Fatura Olustur");
-        btnFaturaOlustur.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-               new CreateInvoice();
-            }
+        JButton btnFaturaOlustur = new JButton("Fatura Oluştur");
+        JButton btnFaturaXML = new JButton("XML İşlemleri");
+        JButton btnFaturaJSON = new JButton("JSON İşlemleri");
+        JButton btnFaturaSil = new JButton("Fatura Sil");
+        JButton btnCikis = new JButton("Çıkış");
+
+        // Fatura Oluşturma butonu farklı pencere açacak
+        btnFaturaOlustur.addActionListener(e -> {
+            CreateInvoice createInvoiceForm = new CreateInvoice();
+            createInvoiceForm.setVisible(true);
         });
-        JButton btnFaturaXML=new JButton("XML İşlemleri");
-        JButton btnFaturaJSON=new JButton("JSON İşlemleri");
-        JButton btnFaturaSil=new JButton("Fatura Sil");
-        JButton btnCikis=new JButton("Cikis");
 
-        panel.add(btnFaturaOlustur);
-        panel.add(btnFaturaJSON);
-        panel.add(btnFaturaXML);
-        panel.add(btnFaturaSil);
-        panel.add(btnCikis);
-
-        btnFaturaOlustur.addActionListener(e ->{
-
-
+        // XML İşlemleri butonu farklı pencere açacak
+        btnFaturaXML.addActionListener(e -> {
+            invoiceXMLForm xmlForm = new invoiceXMLForm();
+            xmlForm.setVisible(true);
         });
+
+        // JSON İşlemleri butonu farklı pencere açacak
+        btnFaturaJSON.addActionListener(e -> {
+            invoiceJSONForm jsonForm = new invoiceJSONForm();
+            jsonForm.setVisible(true);
+        });
+
+        // Fatura Silme işlemi farklı pencere açacak
         btnFaturaSil.addActionListener(e -> {
-            String series = JOptionPane.showInputDialog(this, "Fatura Serisini Girin:");
-            String number = JOptionPane.showInputDialog(this, "Fatura Numarasını Girin:");
-
-            if (series != null && number != null) {
-                DBHelper db = new DBHelper();
-                int invoiceId = db.findInvoiceIdBySeriesAndNumber(series, number);
-                if (invoiceId == -1) {
-                    JOptionPane.showMessageDialog(this, "Fatura bulunamadı.");
-                    return;
-                }
-
-                boolean deleted = db.deleteInvoiceById(invoiceId);
-                if (deleted) {
-                    JOptionPane.showMessageDialog(this, "Fatura başarıyla silindi.");
-                } else {
-                    JOptionPane.showMessageDialog(this, "Fatura silinemedi.");
-                }
-            }
+            invoiceDeleteForm deleteForm = new invoiceDeleteForm();
+            deleteForm.setVisible(true);
         });
-
 
         btnCikis.addActionListener(e -> System.exit(0)); // programı kapatmaya yarar.
 
+        panel.add(btnFaturaOlustur);
+        panel.add(btnFaturaXML);
+        panel.add(btnFaturaJSON);
+        panel.add(btnFaturaSil);
+        panel.add(btnCikis);
 
         add(panel);
 
-        setVisible(true);//oolusturdgumuz pencere gorunur olmasını saglıyor pencere ekranda açmak için zorunlu cagrı
-
-
-
+        setVisible(true);
     }
 }

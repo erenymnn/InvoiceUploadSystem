@@ -2,14 +2,23 @@ package org.example.app;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.text.AbstractDocument;
+import javax.swing.text.html.parser.Element;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.*;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
+import org.w3c.dom.Document;
+
 import java.awt.*;
+import java.io.File;
 
 public class CreateInvoice extends JFrame {
 
     private JTextField txtFaturaSerisi;
     private JTextField txtFaturaNumarasi;
-
 
     private JLabel lblSecilenMusteri;
 
@@ -35,14 +44,9 @@ public class CreateInvoice extends JFrame {
         txtFaturaSerisi.setDocument(new LimitliDocument(5)); // Maksimum 5 karakter
         ustPanel.add(txtFaturaSerisi);
 
-
-
-
-
         ustPanel.add(new JLabel("Fatura Numarası:"));
         txtFaturaNumarasi = new JTextField();
-        txtFaturaNumarasi.setDocument(new NumberDocument(5)); // Maksimum 5 karakter
-
+        txtFaturaNumarasi.setDocument(new NumberDocument(11)); // Maksimum 11 karakter
         ustPanel.add(txtFaturaNumarasi);
 
         JButton btnMusteriSec = new JButton("Müşteri Seç");
@@ -50,6 +54,9 @@ public class CreateInvoice extends JFrame {
 
         lblSecilenMusteri = new JLabel("Müşteri seçilmedi");
         ustPanel.add(lblSecilenMusteri);
+
+        JButton btnUrunEkle = new JButton("Ürün Ekle");
+        ustPanel.add(btnUrunEkle);
 
         // Tablo modelinde "Ürün ID" gizli sütun olarak eklendi
         tableModel = new DefaultTableModel();
@@ -78,11 +85,12 @@ public class CreateInvoice extends JFrame {
         lblToplamSonrasi = new JLabel("0.00");
         altPanel.add(lblToplamSonrasi);
 
-        JButton btnUrunEkle = new JButton("Ürün Ekle");
-        ustPanel.add(btnUrunEkle);
-
         JButton btnKaydet = new JButton("Faturayı Kaydet");
         altPanel.add(btnKaydet);
+
+        JButton btnXMLExport = new JButton("XML Olarak Dışa Aktar");
+        altPanel.add(btnXMLExport);
+
 
         setLayout(new BorderLayout(10, 10));
         add(ustPanel, BorderLayout.NORTH);
@@ -105,12 +113,9 @@ public class CreateInvoice extends JFrame {
             kaydetFatura();
         });
 
+
         setVisible(true);
     }
-
-
-
-
 
     public void musteriSecildi(int id, String adSoyad, String tckn) {
         this.secilenMusteriId = id;
@@ -150,81 +155,9 @@ public class CreateInvoice extends JFrame {
     }
 
     private void kaydetFatura() {
-
-        String series = txtFaturaSerisi.getText().trim();
-        String invoiceNum = txtFaturaNumarasi.getText().trim();
-
-
-
-
-        if (series.length() < 5 || invoiceNum.length() < 10) {
-            JOptionPane.showMessageDialog(this, "fatura seri numarası veya fatura numarasını Eksik girdiniz. Lütfen tüm alanları doğru doldurun.");
-            return; // Devam etme, işlem durur
-        }
-
-
-
-        if (series.isEmpty() || invoiceNum.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Fatura serisi ve numarası boş olamaz.");
-            return;
-        }
-        DBHelper db = new DBHelper();
-
-        // Burada kontrol ekliyoruz:
-        if (db.invoiceExists(series, invoiceNum)) {
-            JOptionPane.showMessageDialog(this, "Bu seri ve numaraya sahip fatura zaten mevcut. Lütfen farklı bir fatura bilgisi girin.");
-            return; // Ekleme işlemini durdur
-        }
-
-
-        if (secilenMusteriId == -1) {
-            JOptionPane.showMessageDialog(this, "Lütfen müşteri seçin.");
-            return;
-        }
-
-        double discount = 0;
-        double total = 0;
-        try {
-            String text = txtIndirim.getText().replace(",", ".").trim();
-            discount = Double.parseDouble(text);
-        } catch (NumberFormatException e) {
-            discount = 0;
-        }
-
-        for (int i = 0; i < tableModel.getRowCount(); i++) {
-            total += (double) tableModel.getValueAt(i, 4);
-        }
-        double totalAfterDiscount = total - discount;
-        if (totalAfterDiscount < 0) totalAfterDiscount = 0;
-
-        DBHelper dbb = new DBHelper();
-
-        // Burada kontrol ekliyoruz:
-        if (dbb.invoiceExists(series, invoiceNum)) {
-            JOptionPane.showMessageDialog(this, "Bu seri ve numaraya sahip fatura zaten mevcut. Lütfen farklı bir fatura bilgisi girin.");
-            return; // Ekleme işlemini durdur
-        }
-        boolean itemsSaved = true;
-        for (int i = 0; i < tableModel.getRowCount(); i++) {
-            int invoiceId = Integer.parseInt(tableModel.getValueAt(i, 0).toString());
-            int itemId = (int) tableModel.getValueAt(i, 0);
-            int quantity = (int) tableModel.getValueAt(i, 3);
-            double itemTotal = (double) tableModel.getValueAt(i, 4);
-
-            boolean added = db.addInvoiceItem(invoiceId, itemId, quantity, itemTotal);
-            if (!added) {
-                itemsSaved = false;
-                break;
-            }
-        }
-
-        if (itemsSaved) {
-            JOptionPane.showMessageDialog(this, "Fatura başarıyla kaydedildi.");
-            this.dispose();
-        } else {
-            JOptionPane.showMessageDialog(this, "Fatura ürünleri kaydedilirken hata oluştu.");
-        }
+        // Kaydetme kodun buraya gelecek (sende var zaten)
     }
 
 
-}
+    }
+

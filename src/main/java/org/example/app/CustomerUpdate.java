@@ -30,7 +30,7 @@ public class CustomerUpdate extends JFrame {
 
         panel.add(new JLabel("TCKN:"));
         txtTckn = new JTextField(tckn);
-        txtTckn.setDocument(new LimitliDocument(5));
+        txtTckn.setDocument(new LimitliDocument(11));
         panel.add(txtTckn);
 
         JButton btnGuncelle = new JButton("Güncelle");

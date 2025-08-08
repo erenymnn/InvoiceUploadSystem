@@ -75,27 +75,42 @@ public class SelectCustomer extends JFrame {
     }
 
     private void yeniMusteriEkle() {
+        // Ad-Soyad al
         String adSoyad = JOptionPane.showInputDialog(this, "Müşteri Ad-Soyad:");
-        if (adSoyad == null || adSoyad.trim().isEmpty()) return;
+        if (adSoyad == null || adSoyad.trim().isEmpty()) {
+            // Kullanıcı iptal etti ya da boş bıraktı
+            return;
+        }
 
-        String tckn = JOptionPane.showInputDialog(this, "Müşteri TCKN:");
-        if (tckn == null || tckn.trim().isEmpty()) return;
+        // TCKN al ve kontrol et
+        String tckn = JOptionPane.showInputDialog(this, "Müşteri TCKN (11 haneli rakam):");
+        if (tckn == null || tckn.trim().isEmpty()) {
+            return;
+        }
 
+        // TCKN sadece rakam ve 11 hane olmalı
+        if (!tckn.matches("\\d{11}")) {
+            JOptionPane.showMessageDialog(this, "Geçersiz TCKN! Lütfen 11 haneli sadece rakamlardan oluşan TCKN girin.");
+            return;
+        }
+
+        // Ad ve soyad ayrıştır
         String[] parts = adSoyad.trim().split(" ", 2);
         String ad = parts.length > 0 ? parts[0] : "";
         String soyad = parts.length > 1 ? parts[1] : "";
 
+        // Müşteri ekle
         boolean eklendi = db.musteriEkle(ad, soyad, tckn);
-
         if (eklendi) {
             musteriler = db.getAllCustomers();
             musteriListModel.clear();
             for (DBHelper.Customer m : musteriler) {
                 musteriListModel.addElement(m.getName() + " " + m.getSurname() + " - " + m.getTckn());
             }
-            JOptionPane.showMessageDialog(this, "Yeni müşteri veritabanına eklendi.");
+            JOptionPane.showMessageDialog(this, "Yeni müşteri başarıyla eklendi.");
         } else {
-            JOptionPane.showMessageDialog(this, "Müşteri eklenemedi (veritabanı hatası).");
+            JOptionPane.showMessageDialog(this, "Müşteri eklenemedi. Lütfen tekrar deneyin.");
         }
     }
+
 }
