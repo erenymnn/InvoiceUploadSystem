@@ -20,13 +20,13 @@ public class invoiceXMLForm extends JFrame {
     private DBHelper.Customer selectedCustomer;
     private List<DBHelper.InvoiceItem> selectedItems;
 
-    public invoiceXMLForm() {
+    public invoiceXMLForm(DBHelper db) {
+        this.db = db;
+
         setTitle("Fatura XML İşlemleri");
         setSize(500, 300);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
-        db = new DBHelper();
 
         lblSelectedInvoice = new JLabel("Seçilen fatura: Yok");
         lblCustomerInfo = new JLabel("Müşteri bilgisi: Yok");
@@ -37,8 +37,23 @@ public class invoiceXMLForm extends JFrame {
         btnClose = new JButton("Kapat");
 
         btnSelectInvoice.addActionListener(e -> {
-            invoiceSelectDialog dialog = new invoiceSelectDialog(this);
+            invoiceSelectDialog dialog = new invoiceSelectDialog(this, db);
             dialog.setVisible(true);
+
+            int selectedInvoiceId = dialog.getSelectedInvoiceId();
+            if (selectedInvoiceId != -1) {
+                // Pull the selected invoice from DB
+                DBHelper.InvoiceSummary invoice = null;
+                for (DBHelper.InvoiceSummary inv : db.getInvoices()) {
+                    if (inv.getId() == selectedInvoiceId) {
+                        invoice = inv;
+                        break;
+                    }
+                }
+                if (invoice != null) {
+                    invoiceSelected(invoice);
+                }
+            }
         });
 
         btnSaveXML.addActionListener(e -> saveInvoiceXML());
@@ -46,7 +61,7 @@ public class invoiceXMLForm extends JFrame {
         btnClose.addActionListener(e -> this.dispose());
 
         JPanel panel = new JPanel(new GridLayout(6, 1, 10, 10));
-        panel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+        panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         panel.add(lblSelectedInvoice);
         panel.add(lblCustomerInfo);
         panel.add(lblTotalAmount);
@@ -55,8 +70,6 @@ public class invoiceXMLForm extends JFrame {
         panel.add(btnClose);
 
         add(panel);
-
-        setVisible(true);
     }
 
     public void invoiceSelected(DBHelper.InvoiceSummary invoice) {
@@ -86,7 +99,8 @@ public class invoiceXMLForm extends JFrame {
         if (userSelection == JFileChooser.APPROVE_OPTION) {
             File fileToSave = fileChooser.getSelectedFile();
             try {
-                XMLUtils.saveInvoiceToXML(selectedInvoice, selectedCustomer, selectedItems, fileToSave);
+                XMLUtils xmlUtils = new XMLUtils(db);
+                xmlUtils.saveInvoiceToXML(selectedInvoice, selectedCustomer, selectedItems, fileToSave);
                 JOptionPane.showMessageDialog(this, "Fatura XML dosyası başarıyla kaydedildi:\n" + fileToSave.getAbsolutePath());
             } catch (Exception e) {
                 e.printStackTrace();
@@ -94,4 +108,5 @@ public class invoiceXMLForm extends JFrame {
             }
         }
     }
+
 }

@@ -9,7 +9,7 @@ public class ProductSelectFrame extends JFrame {
     private CreateInvoice parent;
     private DefaultListModel<String> model;
     private JList<String> productList;
-    private List<DBHelper.Product> products;  // Burada DBHelper.Product olarak değiştirildi
+    private List<DBHelper.Product> products;
 
     public ProductSelectFrame(CreateInvoice parent) {
         this.parent = parent;
@@ -29,11 +29,11 @@ public class ProductSelectFrame extends JFrame {
         add(scrollPane, BorderLayout.CENTER);
         add(panelButtons, BorderLayout.SOUTH);
 
-        // DB'den ürünleri çek
+        // Fetch products from database
         DBHelper db = new DBHelper();
         products = db.getAllProducts();
 
-        // Ürünleri listeye ekle
+        // Fetch products from database
         for (DBHelper.Product p : products) {
             model.addElement(p.getName() + " - " + String.format("%.2f", p.getPrice()) + " TL");
         }

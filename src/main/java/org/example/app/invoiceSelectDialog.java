@@ -1,68 +1,54 @@
 package org.example.app;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.List;
+import java.util.Map;
 
 public class invoiceSelectDialog extends JDialog {
+    private DBHelper dbHelper;
+    private int selectedInvoiceId = -1;
 
-    private invoiceXMLForm parent;
-    private JTable table;
-    private DefaultTableModel tableModel;
-    private List<DBHelper.InvoiceSummary> invoices;
-    private DBHelper db;
+    public invoiceSelectDialog(Frame owner, DBHelper dbHelper) {
+        super(owner, "Fatura Seç", true);
+        this.dbHelper = dbHelper;
+        setSize(400, 300);
+        setLocationRelativeTo(owner);
+        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
-    public invoiceSelectDialog(invoiceXMLForm parent) {
-        super(parent, "Fatura Seç", true);
-        this.parent = parent;
-        this.db = new DBHelper();
+        List<Map<String, Object>> invoices = dbHelper.getInvoicesMaps();
 
-        setSize(600, 400);
-        setLocationRelativeTo(parent);
+        DefaultListModel<String> listModel = new DefaultListModel<>();
+        for (Map<String, Object> inv : invoices) {
+            String itemText = "ID: " + inv.get("id") + " - Seri: " + inv.get("series") + ", No: " + inv.get("invoice");
+            listModel.addElement(itemText);
+        }
 
-        tableModel = new DefaultTableModel();
-        tableModel.setColumnIdentifiers(new String[]{"ID", "Seri", "Numara", "Müşteri ID", "İndirim", "Toplam"});
+        JList<String> invoiceList = new JList<>(listModel);
+        invoiceList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-        table = new JTable(tableModel);
-        table.removeColumn(table.getColumnModel().getColumn(0)); // ID gizle
-
-        loadInvoices();
-
-        JScrollPane scrollPane = new JScrollPane(table);
+        JScrollPane scrollPane = new JScrollPane(invoiceList);
         add(scrollPane, BorderLayout.CENTER);
 
         JButton btnSelect = new JButton("Seç");
-        btnSelect.addActionListener(e -> {
-            int selectedRow = table.getSelectedRow();
-            if (selectedRow == -1) {
-                JOptionPane.showMessageDialog(this, "Lütfen bir fatura seçin.");
-                return;
-            }
-            int modelRow = table.convertRowIndexToModel(selectedRow);
-            DBHelper.InvoiceSummary selectedInvoice = invoices.get(modelRow);
-            parent.invoiceSelected(selectedInvoice);
-            dispose();
-        });
+        btnSelect.setEnabled(false);
+        add(btnSelect, BorderLayout.SOUTH);
 
-        JPanel btnPanel = new JPanel();
-        btnPanel.add(btnSelect);
-        add(btnPanel, BorderLayout.SOUTH);
+        invoiceList.addListSelectionListener(e -> btnSelect.setEnabled(!invoiceList.isSelectionEmpty()));
+
+        btnSelect.addActionListener(e -> {
+            int index = invoiceList.getSelectedIndex();
+            if (index != -1) {
+                Map<String, Object> selectedInvoice = invoices.get(index);
+                selectedInvoiceId = (int) selectedInvoice.get("id");
+                dispose();
+            } else {
+                JOptionPane.showMessageDialog(this, "Lütfen bir fatura seçin.");
+            }
+        });
     }
 
-    private void loadInvoices() {
-        invoices = db.getAllInvoiceSummaries();
-        tableModel.setRowCount(0);
-
-        for (DBHelper.InvoiceSummary invoice : invoices) {
-            tableModel.addRow(new Object[]{
-                    invoice.getId(),
-                    invoice.getSeries(),
-                    invoice.getInvoiceNum(),
-                    invoice.getCustomerId(),
-                    invoice.getDiscount(),
-                    invoice.getTotal()
-            });
-        }
+    public int getSelectedInvoiceId() {
+        return selectedInvoiceId;
     }
 }

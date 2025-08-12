@@ -13,17 +13,17 @@ public class NumberDocument extends PlainDocument {
     public void insertString(int offset, String str, AttributeSet attr) throws BadLocationException {
         if (str == null) return;
 
-        // Sadece rakamlara izin ver
+       //  Only allow numbers
         if (!str.matches("\\d+")) {
             java.awt.Toolkit.getDefaultToolkit().beep(); // Geçersiz giriş için sesli uyarı
             return;
         }
 
-        // Karakter sınırını kontrol et
+        // Check character limit
         if ((getLength() + str.length()) <= limit) {
             super.insertString(offset, str, attr);
         } else {
-            java.awt.Toolkit.getDefaultToolkit().beep(); // Uzunluk sınırı için sesli uyarı
+            java.awt.Toolkit.getDefaultToolkit().beep(); // Sound warning for length limit
         }
     }
 }

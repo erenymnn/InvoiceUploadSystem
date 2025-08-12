@@ -2,18 +2,20 @@ package org.example.app;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class MainMenu extends JFrame {
+
+    private DBHelper dbHelper;
+
     public MainMenu() {
         setTitle("Fatura Yükleme Sistemi - Ana Menü");
         setSize(400, 250);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null); // ekranın ortasında açılır
+        setLocationRelativeTo(null);
 
-        JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(3, 2, 10, 10)); // 3 satır, 2 sütun, aralar 10px
+        dbHelper = new DBHelper();  //db is created here
+
+        JPanel panel = new JPanel(new GridLayout(3, 2, 10, 10));
 
         JButton btnFaturaOlustur = new JButton("Fatura Oluştur");
         JButton btnFaturaXML = new JButton("XML İşlemleri");
@@ -21,31 +23,40 @@ public class MainMenu extends JFrame {
         JButton btnFaturaSil = new JButton("Fatura Sil");
         JButton btnCikis = new JButton("Çıkış");
 
-        // Fatura Oluşturma butonu farklı pencere açacak
         btnFaturaOlustur.addActionListener(e -> {
             CreateInvoice createInvoiceForm = new CreateInvoice();
             createInvoiceForm.setVisible(true);
         });
 
-        // XML İşlemleri butonu farklı pencere açacak
         btnFaturaXML.addActionListener(e -> {
-            invoiceXMLForm xmlForm = new invoiceXMLForm();
+            invoiceXMLForm xmlForm = new invoiceXMLForm(dbHelper);
             xmlForm.setVisible(true);
         });
 
-        // JSON İşlemleri butonu farklı pencere açacak
+
+
         btnFaturaJSON.addActionListener(e -> {
-            invoiceJSONForm jsonForm = new invoiceJSONForm();
-            jsonForm.setVisible(true);
+            // Open the invoice selection dialog
+            invoiceSelectDialog selectDialog = new invoiceSelectDialog(this, dbHelper);
+            selectDialog.setVisible(true);
+
+            // Get the selected invoice ID after the dialog closes
+            int selectedInvoiceId = selectDialog.getSelectedInvoiceId();
+
+            if (selectedInvoiceId != -1) {
+                // Open JSON form with selected invoice
+                invoiceJSONForm jsonForm = new invoiceJSONForm(dbHelper, selectedInvoiceId);
+                jsonForm.setVisible(true);
+            }
         });
 
-        // Fatura Silme işlemi farklı pencere açacak
         btnFaturaSil.addActionListener(e -> {
-            invoiceDeleteForm deleteForm = new invoiceDeleteForm();
+            invoiceDeleteForm deleteForm = new invoiceDeleteForm(dbHelper);
             deleteForm.setVisible(true);
         });
 
-        btnCikis.addActionListener(e -> System.exit(0)); // programı kapatmaya yarar.
+
+        btnCikis.addActionListener(e -> System.exit(0));
 
         panel.add(btnFaturaOlustur);
         panel.add(btnFaturaXML);
@@ -54,7 +65,6 @@ public class MainMenu extends JFrame {
         panel.add(btnCikis);
 
         add(panel);
-
         setVisible(true);
     }
 }

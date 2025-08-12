@@ -9,11 +9,17 @@ import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.File;
+import java.util.List;
 
 public class XMLUtils {
+    private DBHelper dbHelper;
 
-    public static void saveInvoiceToXML(DBHelper.InvoiceSummary invoice, DBHelper.Customer customer,
-                                        java.util.List<DBHelper.InvoiceItem> items, File file) throws Exception {
+    public XMLUtils(DBHelper dbHelper) {
+        this.dbHelper = dbHelper;
+    }
+
+    public void saveInvoiceToXML(DBHelper.InvoiceSummary invoice, DBHelper.Customer customer,
+                                 List<DBHelper.InvoiceItem> items, File file) throws Exception {
 
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
@@ -37,8 +43,12 @@ public class XMLUtils {
         for (DBHelper.InvoiceItem item : items) {
             Element itemElement = doc.createElement("Item");
             itemElement.setAttribute("id", String.valueOf(item.getItemId()));
-            itemElement.setAttribute("name", item.getItemName());
-            itemElement.setAttribute("price", String.valueOf(item.getPrice()));
+
+            String itemName = dbHelper.getProductNameById(item.getItemId());
+            double price = dbHelper.getProductPriceById(item.getItemId());
+
+            itemElement.setAttribute("name", itemName);
+            itemElement.setAttribute("price", String.valueOf(price));
             itemElement.setAttribute("quantity", String.valueOf(item.getQuantity()));
             itemElement.setAttribute("total", String.valueOf(item.getTotal()));
             itemsElement.appendChild(itemElement);

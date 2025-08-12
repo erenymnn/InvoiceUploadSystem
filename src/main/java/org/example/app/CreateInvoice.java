@@ -2,15 +2,7 @@ package org.example.app;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.text.html.parser.Element;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.*;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 
-import org.w3c.dom.Document;
 
 import java.awt.*;
 import java.io.File;
@@ -41,12 +33,12 @@ public class CreateInvoice extends JFrame {
 
         ustPanel.add(new JLabel("Fatura Serisi:"));
         txtFaturaSerisi = new JTextField();
-        txtFaturaSerisi.setDocument(new LimitliDocument(5)); // Maksimum 5 karakter
+        txtFaturaSerisi.setDocument(new LimitliDocument(5)); // Max 5 char
         ustPanel.add(txtFaturaSerisi);
 
         ustPanel.add(new JLabel("Fatura Numarası:"));
         txtFaturaNumarasi = new JTextField();
-        txtFaturaNumarasi.setDocument(new NumberDocument(11)); // Maksimum 11 karakter
+        txtFaturaNumarasi.setDocument(new NumberDocument(11)); // Max 11 Number
         ustPanel.add(txtFaturaNumarasi);
 
         JButton btnMusteriSec = new JButton("Müşteri Seç");
@@ -58,12 +50,12 @@ public class CreateInvoice extends JFrame {
         JButton btnUrunEkle = new JButton("Ürün Ekle");
         ustPanel.add(btnUrunEkle);
 
-        // Tablo modelinde "Ürün ID" gizli sütun olarak eklendi
+        // "Product ID" was added as a hidden column in the table model
         tableModel = new DefaultTableModel();
         tableModel.setColumnIdentifiers(new String[]{"Ürün ID", "Ürün Adı", "Fiyat", "Miktar", "Tutar"});
 
         tblUrunler = new JTable(tableModel);
-        // "Ürün ID" sütununu gizlemek için:
+        // To hide the "Product ID" column:
         tblUrunler.removeColumn(tblUrunler.getColumnModel().getColumn(0));
 
         JScrollPane scrollPane = new JScrollPane(tblUrunler);
@@ -88,8 +80,7 @@ public class CreateInvoice extends JFrame {
         JButton btnKaydet = new JButton("Faturayı Kaydet");
         altPanel.add(btnKaydet);
 
-        JButton btnXMLExport = new JButton("XML Olarak Dışa Aktar");
-        altPanel.add(btnXMLExport);
+
 
 
         setLayout(new BorderLayout(10, 10));
@@ -109,9 +100,10 @@ public class CreateInvoice extends JFrame {
 
         btnHesapla.addActionListener(e -> hesaplaToplam());
 
-        btnKaydet.addActionListener(e -> {
-            kaydetFatura();
-        });
+        btnKaydet.addActionListener(e -> kaydetFatura());
+
+
+
 
 
         setVisible(true);
@@ -154,10 +146,66 @@ public class CreateInvoice extends JFrame {
         lblToplamSonrasi.setText(String.format("%.2f", toplamSonrasi));
     }
 
+    private DBHelper dbHelper = new DBHelper();  // add as class variable
+
     private void kaydetFatura() {
-        // Kaydetme kodun buraya gelecek (sende var zaten)
+        if (secilenMusteriId == -1) {
+            JOptionPane.showMessageDialog(this, "Lütfen önce müşteri seçin!");
+            return;
+        }
+
+        String series = txtFaturaSerisi.getText().trim();
+        String invoiceNum = txtFaturaNumarasi.getText().trim();
+        if (series.isEmpty() || invoiceNum.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Fatura serisi ve numarası boş olamaz!");
+            return;
+        }
+
+        double discount = 0;
+        try {
+            discount = Double.parseDouble(txtIndirim.getText().replace(",", "."));
+            if (discount < 0) discount = 0;
+        } catch (NumberFormatException e) {
+            discount = 0;
+        }
+
+        // Calculate the total
+        double total = 0;
+        for (int i = 0; i < tableModel.getRowCount(); i++) {
+            total += (double) tableModel.getValueAt(i, 4);
+        }
+        total -= discount;
+        if (total < 0) total = 0;
+
+        // First check if the invoice already exists
+        if (dbHelper.invoiceExists(series, invoiceNum)) {
+            JOptionPane.showMessageDialog(this, "Bu seri ve numaraya ait fatura zaten mevcut!");
+            return;
+        }
+
+        // add invoice
+        int invoiceId = dbHelper.addInvoice(series, invoiceNum, secilenMusteriId, discount, total);
+        if (invoiceId == -1) {
+            JOptionPane.showMessageDialog(this, "Fatura kaydedilirken hata oluştu!");
+            return;
+        }
+
+        // add product
+        for (int i = 0; i < tableModel.getRowCount(); i++) {
+            int itemId = (int) tableModel.getValueAt(i, 0);
+            int quantity = (int) tableModel.getValueAt(i, 3);
+            double itemTotal = (double) tableModel.getValueAt(i, 4);
+            boolean success = dbHelper.addInvoiceItem(invoiceId, itemId, quantity, itemTotal);
+            if (!success) {
+                JOptionPane.showMessageDialog(this, "Fatura ürünleri kaydedilirken hata oluştu!");
+                return;
+            }
+        }
+
+        JOptionPane.showMessageDialog(this, "Fatura başarıyla kaydedildi.");
+        this.dispose();  // You can close the window or take other action.
     }
 
 
-    }
+}
 

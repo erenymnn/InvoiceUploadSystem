@@ -13,11 +13,12 @@ public class Main {
     public static void main(String[] args) {
         try (Connection connect = DriverManager.getConnection(CONNECTION_STRING, USERNAME, PASSWORD)) {
             System.out.println("Veritabanina baglanildi.");
-            // İstersen burada tablo oluşturma vb işlemler yapabilirsin.
+
         } catch (SQLException e) {
             System.out.println("Veritabanina baglanirken hata: " + e.getMessage());
         }
 
         new MainMenu();
+
     }
 }

@@ -16,7 +16,7 @@ public class LimitliDocument extends PlainDocument {
         if ((getLength() + str.length()) <= limit) {
             super.insertString(offset, str, attr);
         } else {
-            // Karakter sınırı aşıldıysa ekleme yapma
+            // Do not append if character limit is exceeded
             java.awt.Toolkit.getDefaultToolkit().beep(); // İsteğe bağlı: kullanıcıyı sesle uyar
         }
     }

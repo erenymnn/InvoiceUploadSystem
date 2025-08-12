@@ -9,7 +9,7 @@ public class SelectCustomer extends JFrame {
     private CreateInvoice parent;
     private DefaultListModel<String> musteriListModel;
     private JList<String> musteriList;
-    private List<DBHelper.Customer> musteriler;  // Burada DBHelper.Customer olarak değiştirildi
+    private List<DBHelper.Customer> musteriler;
     private DBHelper db;
 
     public SelectCustomer(CreateInvoice parent) {
@@ -75,32 +75,34 @@ public class SelectCustomer extends JFrame {
     }
 
     private void yeniMusteriEkle() {
-        // Ad-Soyad al
+        String idStr = JOptionPane.showInputDialog(this, "Müşteri ID (benzersiz tam sayı):");
+        if (idStr == null || idStr.trim().isEmpty()) return;
+
+        int id;
+        try {
+            id = Integer.parseInt(idStr.trim());
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Geçersiz ID! Lütfen tam sayı girin.");
+            return;
+        }
+
         String adSoyad = JOptionPane.showInputDialog(this, "Müşteri Ad-Soyad:");
-        if (adSoyad == null || adSoyad.trim().isEmpty()) {
-            // Kullanıcı iptal etti ya da boş bıraktı
-            return;
-        }
+        if (adSoyad == null || adSoyad.trim().isEmpty()) return;
 
-        // TCKN al ve kontrol et
         String tckn = JOptionPane.showInputDialog(this, "Müşteri TCKN (11 haneli rakam):");
-        if (tckn == null || tckn.trim().isEmpty()) {
-            return;
-        }
+        if (tckn == null || tckn.trim().isEmpty()) return;
 
-        // TCKN sadece rakam ve 11 hane olmalı
         if (!tckn.matches("\\d{11}")) {
-            JOptionPane.showMessageDialog(this, "Geçersiz TCKN! Lütfen 11 haneli sadece rakamlardan oluşan TCKN girin.");
+            JOptionPane.showMessageDialog(this, "Geçersiz TCKN! Lütfen 11 haneli rakam girin.");
             return;
         }
 
-        // Ad ve soyad ayrıştır
         String[] parts = adSoyad.trim().split(" ", 2);
         String ad = parts.length > 0 ? parts[0] : "";
         String soyad = parts.length > 1 ? parts[1] : "";
 
-        // Müşteri ekle
-        boolean eklendi = db.musteriEkle(ad, soyad, tckn);
+        boolean eklendi = db.musteriEkle(id, ad, soyad, tckn);
+
         if (eklendi) {
             musteriler = db.getAllCustomers();
             musteriListModel.clear();
@@ -109,8 +111,9 @@ public class SelectCustomer extends JFrame {
             }
             JOptionPane.showMessageDialog(this, "Yeni müşteri başarıyla eklendi.");
         } else {
-            JOptionPane.showMessageDialog(this, "Müşteri eklenemedi. Lütfen tekrar deneyin.");
+            JOptionPane.showMessageDialog(this, "Müşteri eklenemedi. ID benzersiz mi kontrol edin.");
         }
     }
+
 
 }
