@@ -1,13 +1,13 @@
 package org.example.UI.Delete;
 
-import org.example.model.Customers;
-import org.example.model.Invoices;
-import org.example.repository.CustomersRepository;
-import org.example.repository.InvoiceItemsRepository;
-import org.example.repository.InvoicesRepository;
-import org.example.service.CustomersService;
-import org.example.service.InvoiceItemsService;
-import org.example.service.InvoiceService;
+import org.example.Backend.model.Customers;
+import org.example.Backend.model.Invoices;
+import org.example.Backend.repository.CustomersRepository;
+import org.example.Backend.repository.InvoiceItemsRepository;
+import org.example.Backend.repository.InvoicesRepository;
+import org.example.Backend.service.CustomersService;
+import org.example.Backend.service.InvoiceItemsService;
+import org.example.Backend.service.InvoiceService;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,10 +19,6 @@ import java.util.List;
 
 public class DeleteInvoiceForm extends JFrame {
 
-    private InvoiceService invoiceService;
-    private InvoiceItemsService invoiceItemsService;
-    private CustomersService customerService;
-
     private JTextField seriesField;
     private JTextField invoiceNumField;
     private JTextArea infoArea;
@@ -31,6 +27,11 @@ public class DeleteInvoiceForm extends JFrame {
     private JButton closeButton;
 
     private Invoices selectedInvoice;
+
+    // Servisler sınıf seviyesinde
+    private InvoiceService invoiceService;
+    private InvoiceItemsService invoiceItemsService;
+    private CustomersService customersService;
 
     public DeleteInvoiceForm(JFrame parent) {
         super("Fatura Silme");
@@ -52,7 +53,7 @@ public class DeleteInvoiceForm extends JFrame {
             // Servisleri oluştur
             invoiceService = new InvoiceService(invoicesRepo);
             invoiceItemsService = new InvoiceItemsService(invoiceItemsRepo);
-            customerService = new CustomersService(customerRepo);
+            customersService = new CustomersService(customerRepo);
 
         } catch (ClassNotFoundException | SQLException ex) {
             ex.printStackTrace();
@@ -122,7 +123,7 @@ public class DeleteInvoiceForm extends JFrame {
     }
 
     private void searchInvoice(ActionEvent e) {
-        if (invoiceService == null || customerService == null) return;
+        if (invoiceService == null || customersService == null) return;
 
         String series = seriesField.getText().trim();
         String invoiceNum = invoiceNumField.getText().trim();
@@ -134,11 +135,11 @@ public class DeleteInvoiceForm extends JFrame {
         try {
             List<Invoices> invoices = invoiceService.getAllInvoices();
             selectedInvoice = invoices.stream()
-                    .filter(inv -> inv.getSeries().equals(series) && inv.getInvoiceNum().equals(invoiceNum))
+                    .filter(inv -> inv.getSeries().equals(series) && inv.getInvoice().equals(invoiceNum))
                     .findFirst().orElse(null);
 
             if (selectedInvoice != null) {
-                Customers customer = customerService.getCustomerById(selectedInvoice.getCustomerId());
+                Customers customer = customersService.getCustomerById(selectedInvoice.getCustomerId());
 
                 infoArea.setText("Fatura Bulundu:\n");
                 infoArea.append("Müşteri Ad: " + customer.getName() + "\n");

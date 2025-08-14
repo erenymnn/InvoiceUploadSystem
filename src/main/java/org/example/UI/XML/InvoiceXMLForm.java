@@ -1,11 +1,11 @@
 package org.example.UI.XML;
 
-import org.example.infrastructure.DatabaseConnection;
-import org.example.model.Customers;
-import org.example.model.Invoices;
-import org.example.repository.CustomersRepository;
-import org.example.repository.InvoicesRepository;
-import org.example.ui.Invoice.InvoiceSelectDialog;
+import org.example.Backend.infrastructure.DatabaseConnection;
+import org.example.Backend.model.Customers;
+import org.example.Backend.model.Invoices;
+import org.example.Backend.repository.CustomersRepository;
+import org.example.Backend.repository.InvoicesRepository;
+import org.example.UI.Invoice.InvoiceSelectDialog;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -98,7 +98,7 @@ public class InvoiceXMLForm extends JFrame {
                 Customers customer = customerRepo.getById(invoice.getCustomerId());
 
                 seriesField.setText(invoice.getSeries());
-                numberField.setText(invoice.getInvoiceNum());
+                numberField.setText(invoice.getInvoice());
                 customerField.setText(customer.getName() + " " + customer.getSurname() + " (" + customer.getTckn() + ")");
                 totalField.setText(String.valueOf(invoice.getTotal()));
             }

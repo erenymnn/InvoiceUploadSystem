@@ -1,7 +1,7 @@
 package org.example.Backend.service;
 
-import org.example.model.Customers;
-import org.example.repository.CustomersRepository;
+import org.example.Backend.model.Customers;
+import org.example.Backend.repository.CustomersRepository;
 
 import java.util.List;
 

@@ -1,7 +1,7 @@
 package org.example.Backend.service;
 
-import org.example.model.Invoices;
-import org.example.repository.InvoicesRepository;
+import org.example.Backend.model.Invoices;
+import org.example.Backend.repository.InvoicesRepository;
 
 import java.util.List;
 
@@ -42,8 +42,8 @@ public class InvoiceService {
 
     // Fatura serisi ve numarası doğrulama
     private boolean isValidInvoice(Invoices inv) {
-        if (inv.getSeries() == null || inv.getInvoiceNum() == null ||
-                inv.getSeries().trim().isEmpty() || inv.getInvoiceNum().trim().isEmpty()) {
+        if (inv.getSeries() == null || inv.getInvoice() == null ||
+                inv.getSeries().trim().isEmpty() || inv.getInvoice().trim().isEmpty()) {
             return false;
         }
 
@@ -53,7 +53,7 @@ public class InvoiceService {
         }
 
         // Numara: 1-10 haneli rakam
-        if (!inv.getInvoiceNum().matches("\\d{1,10}")) {
+        if (!inv.getInvoice().matches("\\d{1,10}")) {
             return false;
         }
 

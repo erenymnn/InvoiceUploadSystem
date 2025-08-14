@@ -1,6 +1,6 @@
 package org.example.Backend.repository;
 
-import org.example.model.Invoices;
+import org.example.Backend.model.Invoices;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -49,7 +49,7 @@ public class InvoicesRepository {
         String sql = "INSERT INTO invoices (series, invoice, customer_id, discount, total) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, inv.getSeries());
-            ps.setString(2, inv.getInvoiceNum());
+            ps.setString(2, inv.getInvoice());
             ps.setInt(3, inv.getCustomerId());
             ps.setDouble(4, inv.getDiscount());
             ps.setDouble(5, inv.getTotal());
@@ -72,7 +72,7 @@ public class InvoicesRepository {
         String sql = "UPDATE invoices SET series=?, invoice=?, customer_id=?, discount=?, total=? WHERE id=?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, inv.getSeries());
-            ps.setString(2, inv.getInvoiceNum());
+            ps.setString(2, inv.getInvoice());
             ps.setInt(3, inv.getCustomerId());
             ps.setDouble(4, inv.getDiscount());
             ps.setDouble(5, inv.getTotal());
@@ -108,10 +108,10 @@ public class InvoicesRepository {
         );
     }
     public int addAndReturnId(Invoices inv) {
-        String sql = "INSERT INTO invoices (series, invoice_num, customer_id, discount, total) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO invoices (series, invoice, customer_id, discount, total) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, inv.getSeries());
-            ps.setString(2, inv.getInvoiceNum());
+            ps.setString(2, inv.getInvoice());
             ps.setInt(3, inv.getCustomerId());
             ps.setDouble(4, inv.getDiscount());
             ps.setDouble(5, inv.getTotal());

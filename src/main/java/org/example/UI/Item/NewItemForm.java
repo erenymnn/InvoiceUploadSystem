@@ -1,7 +1,7 @@
 package org.example.UI.Item;
 
-import org.example.model.Items;
-import org.example.service.ItemsService;
+import org.example.Backend.model.Items;
+import org.example.Backend.service.ItemsService;
 
 import javax.swing.*;
 import java.awt.*;

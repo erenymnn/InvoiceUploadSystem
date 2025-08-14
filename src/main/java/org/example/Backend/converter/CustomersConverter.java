@@ -1,6 +1,6 @@
 package org.example.Backend.converter;
 
-import org.example.model.Customers;
+import org.example.Backend.model.Customers;
 import org.json.JSONObject;
 
 public class CustomersConverter {

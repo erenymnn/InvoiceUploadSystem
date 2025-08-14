@@ -1,8 +1,8 @@
 package org.example.Backend.converter;
 
-import org.example.model.Customers;
-import org.example.model.InvoiceItems;
-import org.example.model.Invoices;
+import org.example.Backend.model.Customers;
+import org.example.Backend.model.InvoiceItems;
+import org.example.Backend.model.Invoices;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -38,7 +38,7 @@ public class XMLUtils {
         Element invoiceElement = doc.createElement("InvoiceInfo");
         invoiceElement.appendChild(createElement(doc, "Id", String.valueOf(invoice.getId())));
         invoiceElement.appendChild(createElement(doc, "Series", invoice.getSeries()));
-        invoiceElement.appendChild(createElement(doc, "InvoiceNum", invoice.getInvoiceNum()));
+        invoiceElement.appendChild(createElement(doc, "InvoiceNum", invoice.getInvoice()));
         invoiceElement.appendChild(createElement(doc, "Discount", String.valueOf(invoice.getDiscount())));
         invoiceElement.appendChild(createElement(doc, "Total", String.valueOf(invoice.getTotal())));
         rootElement.appendChild(invoiceElement);

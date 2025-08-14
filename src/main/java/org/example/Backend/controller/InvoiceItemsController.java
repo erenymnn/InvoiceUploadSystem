@@ -2,9 +2,9 @@ package org.example.Backend.controller;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import org.example.converter.InvoiceItemsConverter;
-import org.example.model.InvoiceItems;
-import org.example.service.InvoiceItemsService;
+import org.example.Backend.converter.InvoiceItemsConverter;
+import org.example.Backend.model.InvoiceItems;
+import org.example.Backend.service.InvoiceItemsService;
 import org.json.JSONArray;
 import org.json.JSONObject;
 

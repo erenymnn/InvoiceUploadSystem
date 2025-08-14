@@ -1,7 +1,7 @@
 package org.example.Backend.service;
 
-import org.example.model.Items;
-import org.example.repository.ItemsRepository;
+import org.example.Backend.model.Items;
+import org.example.Backend.repository.ItemsRepository;
 
 import java.util.List;
 

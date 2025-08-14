@@ -1,6 +1,6 @@
 package org.example.Backend.repository;
 
-import org.example.model.Customers;
+import org.example.Backend.model.Customers;
 
 import java.sql.*;
 import java.util.ArrayList;

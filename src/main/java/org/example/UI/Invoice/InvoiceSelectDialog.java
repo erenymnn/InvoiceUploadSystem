@@ -1,7 +1,7 @@
 package org.example.UI.Invoice;
 
-import org.example.model.Invoices;
-import org.example.repository.InvoicesRepository;
+import org.example.Backend.model.Invoices;
+import org.example.Backend.repository.InvoicesRepository;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -29,7 +29,7 @@ public class InvoiceSelectDialog extends JDialog {
             InvoicesRepository repo = new InvoicesRepository(conn);
             List<Invoices> invoices = repo.getAll();
             for (Invoices inv : invoices) {
-                model.addRow(new Object[]{inv.getId(), inv.getSeries(), inv.getInvoiceNum()});
+                model.addRow(new Object[]{inv.getId(), inv.getSeries(), inv.getInvoice()});
             }
         } catch (Exception ex) {
             ex.printStackTrace();

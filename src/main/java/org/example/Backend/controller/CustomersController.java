@@ -2,9 +2,9 @@ package org.example.Backend.controller;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import org.example.converter.CustomersConverter;
-import org.example.model.Customers;
-import org.example.service.CustomersService;
+import org.example.Backend.converter.CustomersConverter;
+import org.example.Backend.model.Customers;
+import org.example.Backend.service.CustomersService;
 import org.json.JSONArray;
 import org.json.JSONObject;
 

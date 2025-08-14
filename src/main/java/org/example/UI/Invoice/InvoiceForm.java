@@ -1,16 +1,16 @@
 package org.example.UI.Invoice;
 
-import org.example.infrastructure.DatabaseConnection;
-import org.example.model.Customers;
-import org.example.model.InvoiceItems;
-import org.example.model.Invoices;
-import org.example.model.Items;
-import org.example.repository.CustomersRepository;
-import org.example.repository.InvoiceItemsRepository;
-import org.example.repository.InvoicesRepository;
-import org.example.service.CustomersService;
-import org.example.ui.Customer.CustomerSelectDialog;
-import org.example.ui.Item.ItemsSelectionDialog;
+import org.example.Backend.infrastructure.DatabaseConnection;
+import org.example.Backend.model.Customers;
+import org.example.Backend.model.InvoiceItems;
+import org.example.Backend.model.Invoices;
+import org.example.Backend.model.Items;
+import org.example.Backend.repository.CustomersRepository;
+import org.example.Backend.repository.InvoiceItemsRepository;
+import org.example.Backend.repository.InvoicesRepository;
+import org.example.Backend.service.CustomersService;
+import org.example.UI.Customer.CustomerSelectDialog;
+import org.example.UI.Item.ItemsSelectionDialog;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -257,7 +257,7 @@ public class InvoiceForm extends JFrame {
             // 1. Fatura kaydı
             Invoices invoice = new Invoices();
             invoice.setSeries(series);
-            invoice.setInvoiceNum(number);
+            invoice.setInvoice(number);
             invoice.setCustomerId(customer.getId());
             double totalBeforeDiscount = 0;
             for(int i = 0; i < model.getRowCount(); i++) {

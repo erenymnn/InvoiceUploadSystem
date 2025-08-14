@@ -1,8 +1,8 @@
 package org.example.Backend.converter;
 
-import org.example.model.Customers;
-import org.example.model.InvoiceItems;
-import org.example.model.Invoices;
+import org.example.Backend.model.Customers;
+import org.example.Backend.model.InvoiceItems;
+import org.example.Backend.model.Invoices;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -27,7 +27,7 @@ public class JSONUtils {
         JSONObject invoiceJson = new JSONObject();
         invoiceJson.put("id", invoice.getId());
         invoiceJson.put("series", invoice.getSeries());
-        invoiceJson.put("invoiceNum", invoice.getInvoiceNum());
+        invoiceJson.put("invoiceNum", invoice.getInvoice());
         invoiceJson.put("discount", invoice.getDiscount());
         invoiceJson.put("total", invoice.getTotal());
         root.put("invoice", invoiceJson);

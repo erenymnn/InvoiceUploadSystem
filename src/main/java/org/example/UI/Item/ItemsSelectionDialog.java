@@ -1,9 +1,9 @@
 package org.example.UI.Item;
 
-import org.example.infrastructure.DatabaseConnection;
-import org.example.model.Items;
-import org.example.repository.ItemsRepository;
-import org.example.service.ItemsService;
+import org.example.Backend.infrastructure.DatabaseConnection;
+import org.example.Backend.model.Items;
+import org.example.Backend.repository.ItemsRepository;
+import org.example.Backend.service.ItemsService;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;

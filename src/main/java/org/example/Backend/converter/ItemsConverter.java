@@ -1,6 +1,6 @@
 package org.example.Backend.converter;
 
-import org.example.model.Items;
+import org.example.Backend.model.Items;
 import org.json.JSONObject;
 
 import java.sql.ResultSet;

@@ -1,6 +1,6 @@
 package org.example.Backend.converter;
 
-import org.example.model.Invoices;
+import org.example.Backend.model.Invoices;
 import org.json.JSONObject;
 
 import java.sql.ResultSet;
@@ -22,7 +22,7 @@ public class InvoicesConverter {
         Invoices inv = new Invoices();
         if (json.has("id")) inv.setId(json.getInt("id"));
         inv.setSeries(json.getString("series"));
-        inv.setInvoiceNum(json.getString("Invoice"));
+        inv.setInvoice(json.getString("Invoice"));
         inv.setCustomerId(json.getInt("customer_id"));
         inv.setDiscount(json.getDouble("discount"));
         inv.setTotal(json.getDouble("total"));
@@ -33,7 +33,7 @@ public class InvoicesConverter {
         return new JSONObject()
                 .put("id", inv.getId())
                 .put("series", inv.getSeries())
-                .put("Invoice", inv.getInvoiceNum())
+                .put("Invoice", inv.getInvoice())
                 .put("customer_id", inv.getCustomerId())
                 .put("discount", inv.getDiscount())
                 .put("total", inv.getTotal());

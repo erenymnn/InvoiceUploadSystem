@@ -1,6 +1,6 @@
 package org.example.Backend.repository;
 
-import org.example.model.Items;
+import org.example.Backend.model.Items;
 
 import java.sql.*;
 import java.util.ArrayList;

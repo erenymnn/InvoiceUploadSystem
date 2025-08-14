@@ -1,18 +1,18 @@
 package org.example.Backend.infrastructure;
 
 import com.sun.net.httpserver.HttpServer;
-import org.example.controller.CustomersController;
-import org.example.controller.InvoiceItemsController;
-import org.example.controller.InvoicesController;
-import org.example.controller.ItemsController;
-import org.example.repository.CustomersRepository;
-import org.example.repository.InvoiceItemsRepository;
-import org.example.repository.InvoicesRepository;
-import org.example.repository.ItemsRepository;
-import org.example.service.CustomersService;
-import org.example.service.InvoiceItemsService;
-import org.example.service.InvoiceService;
-import org.example.service.ItemsService;
+import org.example.Backend.controller.CustomersController;
+import org.example.Backend.controller.InvoiceItemsController;
+import org.example.Backend.controller.InvoicesController;
+import org.example.Backend.controller.ItemsController;
+import org.example.Backend.repository.CustomersRepository;
+import org.example.Backend.repository.InvoiceItemsRepository;
+import org.example.Backend.repository.InvoicesRepository;
+import org.example.Backend.repository.ItemsRepository;
+import org.example.Backend.service.CustomersService;
+import org.example.Backend.service.InvoiceItemsService;
+import org.example.Backend.service.InvoiceService;
+import org.example.Backend.service.ItemsService;
 
 import java.net.InetSocketAddress;
 import java.sql.Connection;

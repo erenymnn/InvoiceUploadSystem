@@ -1,9 +1,11 @@
 package org.example.UI.Customer;
 
-import org.example.infrastructure.DatabaseConnection;
-import org.example.model.Customers;
-import org.example.repository.CustomersRepository;
-import org.example.service.CustomersService;
+
+
+import org.example.Backend.infrastructure.DatabaseConnection;
+import org.example.Backend.model.Customers;
+import org.example.Backend.repository.CustomersRepository;
+import org.example.Backend.service.CustomersService;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -19,7 +21,7 @@ public class CustomerSelectDialog extends JDialog {
     private JButton selectButton;
     private JButton newCustomerButton;
     private Customers selectedCustomer;
-    private  CustomersService service;
+    private CustomersService service;
 
     public CustomerSelectDialog(JFrame parent) {
         super(parent, "Müşteri Seç", true);
