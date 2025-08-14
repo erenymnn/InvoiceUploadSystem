@@ -2,7 +2,7 @@ package org.example.UI.Customer;
 
 
 
-import org.example.Backend.infrastructure.DatabaseConnection;
+import org.example.Backend.DBHelper.DatabaseConnection;
 import org.example.Backend.model.Customers;
 import org.example.Backend.repository.CustomersRepository;
 import org.example.Backend.service.CustomersService;
@@ -33,7 +33,7 @@ public class CustomerSelectDialog extends JDialog {
             service = new CustomersService(new CustomersRepository(DatabaseConnection.getConnection()));
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(this, "Veritabanına bağlanılamadı: " + ex.getMessage());
-            dispose(); // Dialog açılamazsa kapat
+            dispose(); // if open dialog close
             return;
         }
 
@@ -95,11 +95,11 @@ public class CustomerSelectDialog extends JDialog {
             boolean success = service.addCustomer(name, surname, tckn);
             if (success) {
                 loadCustomers();
-                // en son eklenen müşteriyi seçili yap
+                //make the last added customer selected
                 int lastRow = tableModel.getRowCount() - 1;
                 table.setRowSelectionInterval(lastRow, lastRow);
             } else {
-                JOptionPane.showMessageDialog(this, "Müşteri eklenemedi!");
+                JOptionPane.showMessageDialog(this, "Müşteri eklenemedi!{Lütfen 11 haneli TC Kimlik Numaranızı Girip Deneyiniz.}");
             }
         }
     }

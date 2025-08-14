@@ -13,7 +13,7 @@ public class CustomersRepository {
         this.conn = conn;
     }
 
-    // Tüm müşterileri getir
+    // Fetch all customers
     public List<Customers> getAll() {
         List<Customers> list = new ArrayList<>();
         String sql = "SELECT * FROM customers";
@@ -32,7 +32,7 @@ public class CustomersRepository {
         return list;
     }
 
-    // ID ile müşteri getir
+    // Get customer by ID
     public Customers getById(int id) {
         String sql = "SELECT * FROM customers WHERE id=?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -46,7 +46,7 @@ public class CustomersRepository {
         return null;
     }
 
-    // TCKN ile müşteri getir
+    // Get customer with TR ID No.
     public Customers findByTckn(String tckn) {
         String sql = "SELECT * FROM customers WHERE tckn=?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -60,7 +60,7 @@ public class CustomersRepository {
         return null;
     }
 
-    // Müşteri ekle
+    //add customer
     public boolean add(Customers c) {
         String sql = "INSERT INTO customers (name, surname, tckn) VALUES (?, ?, ?)";
         try (PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -81,7 +81,7 @@ public class CustomersRepository {
         return false;
     }
 
-    // Müşteri güncelle
+    // customer update
     public boolean update(Customers c) {
         String sql = "UPDATE customers SET name=?, surname=?, tckn=? WHERE id=?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -96,7 +96,7 @@ public class CustomersRepository {
         return false;
     }
 
-    // Müşteri sil
+    // customer delete
     public boolean delete(int id) {
         String sql = "DELETE FROM customers WHERE id=?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {

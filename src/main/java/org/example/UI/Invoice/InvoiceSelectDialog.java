@@ -19,12 +19,12 @@ public class InvoiceSelectDialog extends JDialog {
         setLocationRelativeTo(owner);
         setLayout(new BorderLayout());
 
-        // Tablo modeli oluştur
+        //Create table model
         DefaultTableModel model = new DefaultTableModel(new Object[]{"ID", "Seri", "Numara"}, 0);
         JTable table = new JTable(model);
         add(new JScrollPane(table), BorderLayout.CENTER);
 
-        // Faturaları getir ve tabloya ekle
+        // Fetch invoices and add them to the table
         try {
             InvoicesRepository repo = new InvoicesRepository(conn);
             List<Invoices> invoices = repo.getAll();
@@ -36,7 +36,7 @@ public class InvoiceSelectDialog extends JDialog {
             JOptionPane.showMessageDialog(this, "Faturalar getirilemedi: " + ex.getMessage());
         }
 
-        // Seç butonu
+        // select button
         JButton selectBtn = new JButton("Seç");
         selectBtn.addActionListener(e -> {
             int row = table.getSelectedRow();

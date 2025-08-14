@@ -1,6 +1,6 @@
 package org.example.UI.Invoice;
 
-import org.example.Backend.infrastructure.DatabaseConnection;
+import org.example.Backend.DBHelper.DatabaseConnection;
 import org.example.Backend.model.Customers;
 import org.example.Backend.model.InvoiceItems;
 import org.example.Backend.model.Invoices;

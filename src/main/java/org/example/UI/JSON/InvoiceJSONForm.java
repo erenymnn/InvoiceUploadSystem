@@ -1,6 +1,6 @@
 package org.example.UI.JSON;
 
-import org.example.Backend.infrastructure.DatabaseConnection;
+import org.example.Backend.DBHelper.DatabaseConnection;
 import org.example.Backend.model.Customers;
 import org.example.Backend.model.Invoices;
 import org.example.Backend.repository.CustomersRepository;

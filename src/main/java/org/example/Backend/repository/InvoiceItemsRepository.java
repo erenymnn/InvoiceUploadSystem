@@ -97,14 +97,14 @@ public class InvoiceItemsRepository {
                     if (keys.next()) {
                         int id = keys.getInt(1);
                         item.setId(id);
-                        return id; // Ürün detay ID'si döner
+                        return id; // Returns the product detail ID
                     }
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return -1; // ekleme başarısızsa
+        return -1; // if add fail
     }
 
 

@@ -121,14 +121,14 @@ public class InvoicesRepository {
                     if (keys.next()) {
                         int id = keys.getInt(1);
                         inv.setId(id);
-                        return id;  // fatura ID'sini döndür
+                        return id;  //return invoice ID
                     }
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return -1;  // ekleme başarısızsa
+        return -1;  // if add fail
     }
 
 }

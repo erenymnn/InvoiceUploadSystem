@@ -1,6 +1,6 @@
 package org.example.UI.Item;
 
-import org.example.Backend.infrastructure.DatabaseConnection;
+import org.example.Backend.DBHelper.DatabaseConnection;
 import org.example.Backend.model.Items;
 import org.example.Backend.repository.ItemsRepository;
 import org.example.Backend.service.ItemsService;
@@ -32,7 +32,7 @@ public class ItemsSelectionDialog extends JDialog {
             return;
         }
 
-        // Tablo
+        // Table
         model = new DefaultTableModel(new Object[]{"ID", "Ürün Adı", "Fiyat"}, 0);
         table = new JTable(model);
         loadItems();
@@ -68,11 +68,11 @@ public class ItemsSelectionDialog extends JDialog {
     }
 
     private void addNewItem() {
-        // NewItemForm modal olarak açılır
+        // NewItemForm opens modal
         NewItemForm form = new NewItemForm((JFrame) getParent(), itemService);
         form.setVisible(true);
 
-        // Form kapatıldıktan sonra tabloyu güncelle
+        // Update the table after the form is closed
         loadItems();
     }
 

@@ -22,7 +22,7 @@ public class InvoiceService {
 
     public boolean addInvoice(Invoices inv) {
         if (!isValidInvoice(inv)) {
-            System.out.println("❌ Geçersiz fatura bilgisi: Seri veya numara hatalı.");
+            System.out.println("Geçersiz fatura bilgisi: Seri veya numara hatalı.");
             return false;
         }
         return repo.add(inv);
@@ -30,7 +30,7 @@ public class InvoiceService {
 
     public boolean updateInvoice(Invoices inv) {
         if (!isValidInvoice(inv)) {
-            System.out.println("❌ Geçersiz fatura bilgisi: Seri veya numara hatalı.");
+            System.out.println("Geçersiz fatura bilgisi: Seri veya numara hatalı.");
             return false;
         }
         return repo.update(inv);
@@ -40,20 +40,24 @@ public class InvoiceService {
         return repo.delete(id);
     }
 
-    // Fatura serisi ve numarası doğrulama
+    // Invoice series and number verification
     private boolean isValidInvoice(Invoices inv) {
-        if (inv.getSeries() == null || inv.getInvoice() == null ||
-                inv.getSeries().trim().isEmpty() || inv.getInvoice().trim().isEmpty()) {
+        String series = inv.getSeries();
+        String invoice = inv.getInvoice(); // modeldeki doğru alan
+
+        if (series == null || invoice == null || series.trim().isEmpty() || invoice.trim().isEmpty()) {
             return false;
         }
 
         // Seri: 1-5 karakter alfanümerik
-        if (!inv.getSeries().matches("[A-Za-z0-9]{1,5}")) {
+        if (!series.matches("[A-Za-z0-9]{1,5}")) {
+            System.out.println("Seri hatalı: " + series);
             return false;
         }
 
-        // Numara: 1-10 haneli rakam
-        if (!inv.getInvoice().matches("\\d{1,10}")) {
+        // Numara: 1-10 rakam
+        if (!invoice.matches("\\d{1,10}")) {
+            System.out.println("Numara hatalı: " + invoice);
             return false;
         }
 

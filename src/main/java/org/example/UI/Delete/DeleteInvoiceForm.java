@@ -28,7 +28,7 @@ public class DeleteInvoiceForm extends JFrame {
 
     private Invoices selectedInvoice;
 
-    // Servisler sınıf seviyesinde
+    // Services at class level
     private InvoiceService invoiceService;
     private InvoiceItemsService invoiceItemsService;
     private CustomersService customersService;
@@ -36,7 +36,7 @@ public class DeleteInvoiceForm extends JFrame {
     public DeleteInvoiceForm(JFrame parent) {
         super("Fatura Silme");
 
-        // JDBC Connection ve servisleri oluştur
+        // JDBC Connection and service create
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection conn = DriverManager.getConnection(
@@ -50,7 +50,7 @@ public class DeleteInvoiceForm extends JFrame {
             InvoiceItemsRepository invoiceItemsRepo = new InvoiceItemsRepository(conn);
             CustomersRepository customerRepo = new CustomersRepository(conn);
 
-            // Servisleri oluştur
+            // create services
             invoiceService = new InvoiceService(invoicesRepo);
             invoiceItemsService = new InvoiceItemsService(invoiceItemsRepo);
             customersService = new CustomersService(customerRepo);
@@ -77,7 +77,7 @@ public class DeleteInvoiceForm extends JFrame {
         gbc.insets = new Insets(5,5,5,5);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Fatura Serisi
+        //invoice series
         gbc.gridx = 0; gbc.gridy = 0;
         panel.add(new JLabel("Fatura Serisi:"), gbc);
 
@@ -85,7 +85,7 @@ public class DeleteInvoiceForm extends JFrame {
         gbc.gridx = 1; gbc.gridy = 0;
         panel.add(seriesField, gbc);
 
-        // Fatura Numarası
+        //invoice Number
         gbc.gridx = 0; gbc.gridy = 1;
         panel.add(new JLabel("Fatura Numarası:"), gbc);
 
@@ -93,14 +93,14 @@ public class DeleteInvoiceForm extends JFrame {
         gbc.gridx = 1; gbc.gridy = 1;
         panel.add(invoiceNumField, gbc);
 
-        // Bilgi Alanı
+        //information area
         infoArea = new JTextArea(10, 30);
         infoArea.setEditable(false);
         JScrollPane scrollPane = new JScrollPane(infoArea);
         gbc.gridx = 0; gbc.gridy = 2; gbc.gridwidth = 2;
         panel.add(scrollPane, gbc);
 
-        // Butonlar
+        // Buttons
         JPanel buttonPanel = new JPanel();
 
         searchButton = new JButton("Faturayı Ara");

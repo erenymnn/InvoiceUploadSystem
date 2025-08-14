@@ -1,4 +1,4 @@
-package org.example.Backend.converter;
+package org.example.Backend.Utils;
 
 import org.example.Backend.model.Customers;
 import org.example.Backend.model.InvoiceItems;
@@ -27,7 +27,7 @@ public class JSONUtils {
         JSONObject invoiceJson = new JSONObject();
         invoiceJson.put("id", invoice.getId());
         invoiceJson.put("series", invoice.getSeries());
-        invoiceJson.put("invoiceNum", invoice.getInvoice());
+        invoiceJson.put("Invoice", invoice.getInvoice());
         invoiceJson.put("discount", invoice.getDiscount());
         invoiceJson.put("total", invoice.getTotal());
         root.put("invoice", invoiceJson);
@@ -36,7 +36,7 @@ public class JSONUtils {
         JSONArray itemsArray = new JSONArray();
         for (InvoiceItems item : items) {
             JSONObject itemJson = new JSONObject();
-            itemJson.put("itemId", item.getItemId());
+            itemJson.put("item_id", item.getItemId());
             itemJson.put("quantity", item.getQuantity());
             itemJson.put("total", item.getTotal());
             itemsArray.put(itemJson);
