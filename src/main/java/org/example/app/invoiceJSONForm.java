@@ -34,7 +34,7 @@ public class invoiceJSONForm extends JFrame {
         // Fetch the invoice from the database and convert it to JSON
         try (Connection conn = dbHelper.connect();
              PreparedStatement stmt = conn.prepareStatement(
-                     "SELECT id, series, invoice, customer_id, discount, total " +
+                     "SELECT id, series, Invoice, customer_id, discount, total " +
                              "FROM invoices WHERE id = ?"
              )) {
 
@@ -45,7 +45,7 @@ public class invoiceJSONForm extends JFrame {
                     JSONObject json = new JSONObject();
                     json.put("id", rs.getInt("id"));
                     json.put("series", rs.getString("series"));
-                    json.put("invoice", rs.getString("invoice"));
+                    json.put("Invoice", rs.getString("Invoice"));
                     json.put("customer_id", rs.getInt("customer_id"));
                     json.put("discount", rs.getDouble("discount"));
                     json.put("total", rs.getDouble("total"));

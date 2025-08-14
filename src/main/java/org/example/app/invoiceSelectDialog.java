@@ -20,7 +20,7 @@ public class invoiceSelectDialog extends JDialog {
 
         DefaultListModel<String> listModel = new DefaultListModel<>();
         for (Map<String, Object> inv : invoices) {
-            String itemText = "ID: " + inv.get("id") + " - Seri: " + inv.get("series") + ", No: " + inv.get("invoice");
+            String itemText = "ID: " + inv.get("id") + " - Seri: " + inv.get("series") + ", No: " + inv.get("Invoice");
             listModel.addElement(itemText);
         }
 

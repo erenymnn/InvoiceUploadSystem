@@ -538,6 +538,7 @@ public class DBHelper {
         return items;
     }
 
+
     public boolean addInvoiceItem(int invoiceId, int itemId, int quantity, double total) {
         String sql = "INSERT INTO invoiceitems (invoice_id, item_id, quantity, total) VALUES (?, ?, ?, ?)";
         try (Connection conn = connect();

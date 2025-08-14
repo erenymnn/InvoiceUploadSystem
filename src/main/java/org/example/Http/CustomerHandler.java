@@ -25,34 +25,63 @@ public class CustomerHandler implements HttpHandler {
 
         try {
             if ("GET".equalsIgnoreCase(method)) {
-                List<DBHelper.Customer> customers = dbHelper.getAllCustomers();
-                JSONArray arr = new JSONArray();
-                for (DBHelper.Customer c : customers) {
-                    JSONObject obj = new JSONObject();
-                    obj.put("id", c.getId());
-                    obj.put("name", c.getName());
-                    obj.put("surname", c.getSurname());
-                    obj.put("tckn", c.getTckn());
-                    arr.put(obj);
-                }
-                sendJsonResponse(exchange, 200, arr.toString());
+                String path = exchange.getRequestURI().getPath();
+                String[] parts = path.split("/");
 
-            } else if ("POST".equalsIgnoreCase(method)) {
-                JSONObject obj = new JSONObject(readRequestBody(exchange));
-                int id = obj.getInt("id"); // id zorunlu
-                boolean success = dbHelper.musteriEkle(
-                        id,
-                        obj.getString("name"),
-                        obj.getString("surname"),
-                        obj.getString("tckn")
-                );
+                if (parts.length == 3) { // /customers/{id}
+                    try {
+                        int id = Integer.parseInt(parts[2]);
+                        DBHelper.Customer c = dbHelper.getCustomerById(id);
+                        if (c != null) {
+                            JSONObject obj = new JSONObject();
+                            obj.put("id", c.getId());
+                            obj.put("name", c.getName());
+                            obj.put("surname", c.getSurname());
+                            obj.put("tckn", c.getTckn());
+                            sendJsonResponse(exchange, 200, obj.toString());
+                        } else {
+                            sendJsonResponse(exchange, 404, "{\"status\":\"error\",\"message\":\"Müşteri bulunamadı.\"}");
+                        }
+                    } catch (NumberFormatException e) {
+                        sendJsonResponse(exchange, 400, "{\"status\":\"error\",\"message\":\"Geçersiz ID.\"}");
+                    }
+                } else {
+                    List<DBHelper.Customer> customers = dbHelper.getAllCustomers();
+                    JSONArray arr = new JSONArray();
+                    for (DBHelper.Customer c : customers) {
+                        JSONObject obj = new JSONObject();
+                        obj.put("id", c.getId());
+                        obj.put("name", c.getName());
+                        obj.put("surname", c.getSurname());
+                        obj.put("tckn", c.getTckn());
+                        arr.put(obj);
+                    }
+                    sendJsonResponse(exchange, 200, arr.toString());
+                }
+            }
+            else if ("POST".equalsIgnoreCase(method)) {
+                String body = readRequestBody(exchange);
+                JSONObject obj = new JSONObject(body);
+
+                if (!obj.has("id") || !obj.has("name") || !obj.has("surname") || !obj.has("tckn")) {
+                    sendJsonResponse(exchange, 400, "{\"status\":\"error\",\"message\":\"Eksik parametreler.\"}");
+                    return;
+                }
+
+                int id = obj.getInt("id");
+                String name = obj.getString("name");
+                String surname = obj.getString("surname");
+                String tckn = obj.getString("tckn");
+
+                boolean success = dbHelper.musteriEkle(id, name, surname, tckn);
+
                 if (success) {
                     sendJsonResponse(exchange, 201, "{\"status\":\"success\",\"message\":\"Müşteri eklendi.\"}");
                 } else {
                     sendJsonResponse(exchange, 400, "{\"status\":\"error\",\"message\":\"Müşteri eklenemedi.\"}");
                 }
-
-            } else if ("PUT".equalsIgnoreCase(method)) {
+            }
+            else if ("PUT".equalsIgnoreCase(method)) {
                 try (InputStream is = exchange.getRequestBody()) {
                     String body = new String(is.readAllBytes(), StandardCharsets.UTF_8);
                     JSONObject obj = new JSONObject(body);
